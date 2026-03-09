@@ -16,19 +16,26 @@ namespace VersionUtilities
             }
 
             if (!Uri.TryCreate(updateUrl, UriKind.Absolute, out var uriResult) ||
-                (uriResult.Scheme != Uri.UriSchemeHttp && uriResult.Scheme != Uri.UriSchemeHttps))
-            {
-                throw new ArgumentException("Update URL must be a well-formed absolute HTTP or HTTPS URL.", nameof(updateUrl));
-            }
+        private static readonly HttpClient SharedHttpClient = new HttpClient();
+
+        private readonly HttpClient _httpClient;
+
+        public string UpdateUrl { get; }
+
+        public UpdateChecker(string updateUrl)
+            : this(updateUrl, SharedHttpClient)
+        {
+        }
+
+        public UpdateChecker(string updateUrl, HttpClient httpClient)
+        {
             UpdateUrl = updateUrl;
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         public async Task<UpdateInfo> GetLatestVersionAsync()
         {
-            using HttpClient client = new HttpClient();
-
-            string json = await client.GetStringAsync(UpdateUrl);
-
+            string json = await _httpClient.GetStringAsync(UpdateUrl);
             return JsonSerializer.Deserialize<UpdateInfo>(json);
         }
 
