@@ -36,7 +36,14 @@ namespace VersionUtilities
         public async Task<UpdateInfo> GetLatestVersionAsync()
         {
             string json = await _httpClient.GetStringAsync(UpdateUrl);
-            return JsonSerializer.Deserialize<UpdateInfo>(json);
+            var updateInfo = JsonSerializer.Deserialize<UpdateInfo>(json);
+
+            if (updateInfo is null)
+            {
+                throw new InvalidOperationException("Failed to deserialize update information from the update server response.");
+            }
+
+            return updateInfo;
         }
 
         public async Task<bool> IsUpdateAvailableAsync()
