@@ -74,10 +74,19 @@ namespace VersionUtilities
 
             string[] numbers = version.Split('.');
 
-            int major = numbers.Length > 0 ? int.Parse(numbers[0]) : 0;
-            int minor = numbers.Length > 1 ? int.Parse(numbers[1]) : 0;
-            int patch = numbers.Length > 2 ? int.Parse(numbers[2]) : 0;
+            if (numbers.Length != 3)
+                throw new ArgumentException(
+                    "Version core must consist of exactly three dot-separated numeric identifiers (MAJOR.MINOR.PATCH).",
+                    nameof(version));
 
+            if (!int.TryParse(numbers[0], out int major) || major < 0)
+                throw new ArgumentException("MAJOR version must be a non-negative integer.", nameof(version));
+
+            if (!int.TryParse(numbers[1], out int minor) || minor < 0)
+                throw new ArgumentException("MINOR version must be a non-negative integer.", nameof(version));
+
+            if (!int.TryParse(numbers[2], out int patch) || patch < 0)
+                throw new ArgumentException("PATCH version must be a non-negative integer.", nameof(version));
             string[] preReleaseParts = pre?.Split('.') ?? Array.Empty<string>();
 
             return new SemVersion(major, minor, patch, preReleaseParts, build);
