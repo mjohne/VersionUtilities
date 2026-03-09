@@ -12,6 +12,11 @@ namespace VersionUtilities
 
         public static AdvancedVersionRange Parse(string range)
         {
+            if (range is null)
+                throw new ArgumentNullException(nameof(range));
+
+            if (string.IsNullOrWhiteSpace(range))
+                throw new ArgumentException("Version range cannot be empty or whitespace.", nameof(range));
             range = range.Trim();
 
             if (range.StartsWith("^"))
