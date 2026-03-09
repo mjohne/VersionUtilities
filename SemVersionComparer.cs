@@ -13,6 +13,6 @@ namespace VersionUtilities
             => SemVersion.Parse(v1).CompareTo(SemVersion.Parse(v2)) < 0;
 
         public static bool Equal(string v1, string v2)
-            => SemVersion.Parse(v1).CompareTo(SemVersion.Parse(v2)) == 0;
+            => SemVersion.Parse(v1).Equals(SemVersion.Parse(v2));
     }
 }
