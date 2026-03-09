@@ -19,11 +19,29 @@ namespace VersionUtilities
                           IEnumerable<string> preRelease = null,
                           string buildMetadata = null)
         {
+            if (major < 0)
+                throw new ArgumentOutOfRangeException(nameof(major), "Major version must be non-negative.");
+            if (minor < 0)
+                throw new ArgumentOutOfRangeException(nameof(minor), "Minor version must be non-negative.");
+            if (patch < 0)
+                throw new ArgumentOutOfRangeException(nameof(patch), "Patch version must be non-negative.");
+
+            var preReleaseArray = preRelease?.ToArray() ?? Array.Empty<string>();
+            if (preReleaseArray.Any(string.IsNullOrEmpty))
+                throw new ArgumentException("Pre-release identifiers must be non-empty.", nameof(preRelease));
+
+            if (!string.IsNullOrEmpty(buildMetadata))
+            {
+                var buildParts = buildMetadata.Split('.');
+                if (buildParts.Any(string.IsNullOrEmpty))
+                    throw new ArgumentException("Build metadata identifiers must be non-empty.", nameof(buildMetadata));
+            }
+
             Major = major;
             Minor = minor;
             Patch = patch;
 
-            PreRelease = preRelease?.ToArray() ?? Array.Empty<string>();
+            PreRelease = preReleaseArray;
             BuildMetadata = buildMetadata;
         }
 
