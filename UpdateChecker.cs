@@ -11,6 +11,16 @@ namespace VersionUtilities
 
         public UpdateChecker(string updateUrl)
         {
+            if (string.IsNullOrWhiteSpace(updateUrl))
+            {
+                throw new ArgumentException("Update URL must not be null or whitespace.", nameof(updateUrl));
+            }
+
+            if (!Uri.TryCreate(updateUrl, UriKind.Absolute, out var uriResult) ||
+                (uriResult.Scheme != Uri.UriSchemeHttp && uriResult.Scheme != Uri.UriSchemeHttps))
+            {
+                throw new ArgumentException("Update URL must be a well-formed absolute HTTP or HTTPS URL.", nameof(updateUrl));
+            }
             UpdateUrl = updateUrl;
         }
 
