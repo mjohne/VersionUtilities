@@ -1,5 +1,3 @@
-using System;
-
 namespace VersionUtilities
 {
     public class AdvancedVersionRange
