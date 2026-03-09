@@ -138,7 +138,7 @@ namespace VersionUtilities
                 }
                 else
                 {
-                    int cmp = string.Compare(a, b, StringComparison.OrdinalIgnoreCase);
+                    int cmp = string.Compare(a, b, StringComparison.Ordinal);
                     if (cmp != 0) return cmp;
                 }
             }
