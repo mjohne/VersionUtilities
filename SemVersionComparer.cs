@@ -1,7 +1,11 @@
+using System.Collections.Generic;
+
 namespace VersionUtilities
 {
-    public static class SemVersionComparer
+    public sealed class SemVersionComparer : IComparer<string>
     {
+        public int Compare(string x, string y)
+            => SemVersion.Parse(x).CompareTo(SemVersion.Parse(y));
         public static bool Greater(string v1, string v2)
             => SemVersion.Parse(v1).CompareTo(SemVersion.Parse(v2)) > 0;
 
