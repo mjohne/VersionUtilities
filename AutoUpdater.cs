@@ -24,10 +24,11 @@ namespace VersionUtilities
             string zipPath = Path.Combine(TempFolder, "update.zip");
 
             using HttpClient client = new HttpClient();
-            var data = await client.GetByteArrayAsync(info.DownloadUrl);
-
-            await File.WriteAllBytesAsync(zipPath, data);
-
+            using (var responseStream = await client.GetStreamAsync(info.DownloadUrl))
+            using (var fileStream = File.Create(zipPath))
+            {
+                await responseStream.CopyToAsync(fileStream);
+            }
             if (!VerifySha256(zipPath, info.Sha256))
                 throw new Exception("SHA256 verification failed.");
 
