@@ -48,7 +48,7 @@ namespace VersionUtilities
         public static SemVersion Parse(string version)
         {
             if (string.IsNullOrWhiteSpace(version))
-                throw new ArgumentException("Version string is empty.");
+                throw new ArgumentException("Version string is empty.", nameof(version));
 
             version = version.Trim();
 
