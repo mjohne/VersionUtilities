@@ -48,7 +48,13 @@ namespace VersionUtilities
             if (!string.IsNullOrWhiteSpace(info))
                 return SemVersion.Parse(info);
 
-            return SemVersion.Parse(GetAssemblyVersion().ToString());
+            var assemblyVersion = GetAssemblyVersion();
+            int major = assemblyVersion.Major;
+            int minor = assemblyVersion.Minor < 0 ? 0 : assemblyVersion.Minor;
+            int patch = assemblyVersion.Build < 0 ? 0 : assemblyVersion.Build;
+            string buildMetadata = assemblyVersion.Revision < 0 ? null : assemblyVersion.Revision.ToString();
+
+            return new SemVersion(major, minor, patch, null, buildMetadata);
         }
 
         /// <summary>
